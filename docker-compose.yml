@@ -27,20 +27,20 @@ services:
     depends_on:
       - postgres
     environment:
-      APP_NAME: Tickets Service
-      APP_ENV: local
-      APP_DEBUG: true
-      APP_URL: http://localhost:8080
-      APP_TIMEZONE: UTC
-      LOG_CHANNEL: stderr
-      DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: tickets
-      DB_USERNAME: program
-      DB_PASSWORD: test
+      APP_NAME: "Tickets Service"
+      APP_ENV: "local"
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:8080"
+      APP_TIMEZONE: "UTC"
+      LOG_CHANNEL: "stderr"
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_DATABASE: "tickets"
+      DB_USERNAME: "program"
+      DB_PASSWORD: "test"
       CACHE_DRIVER: null
-      QUEUE_CONNECTION: sync
+      QUEUE_CONNECTION: "sync"
 
   films-service:
     build: ./films-service
@@ -51,20 +51,20 @@ services:
     depends_on:
       - postgres
     environment:
-      APP_NAME: Films Service
-      APP_ENV: local
-      APP_DEBUG: true
-      APP_URL: http://localhost:8070
-      APP_TIMEZONE: UTC
-      LOG_CHANNEL: stderr
-      DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: films
-      DB_USERNAME: program
-      DB_PASSWORD: test
+      APP_NAME: "Films Service"
+      APP_ENV: "local"
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:8070"
+      APP_TIMEZONE: "UTC"
+      LOG_CHANNEL: "stderr"
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_DATABASE: "films"
+      DB_USERNAME: "program"
+      DB_PASSWORD: "test"
       CACHE_DRIVER: null
-      QUEUE_CONNECTION: sync
+      QUEUE_CONNECTION: "sync"
 
   cinema-service:
     build: ./cinema-service
@@ -75,20 +75,20 @@ services:
     depends_on:
       - postgres
     environment:
-      APP_NAME: Cinema Service
-      APP_ENV: local
-      APP_DEBUG: true
-      APP_URL: http://localhost:8060
-      APP_TIMEZONE: UTC
-      LOG_CHANNEL: stderr
-      DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: cinema
-      DB_USERNAME: program
-      DB_PASSWORD: test
+      APP_NAME: "Cinema Service"
+      APP_ENV: "local"
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:8060"
+      APP_TIMEZONE: "UTC"
+      LOG_CHANNEL: "stderr"
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_DATABASE: "cinema"
+      DB_USERNAME: "program"
+      DB_PASSWORD: "test"
       CACHE_DRIVER: null
-      QUEUE_CONNECTION: sync
+      QUEUE_CONNECTION: "sync"
 
 volumes:
   db-data:
