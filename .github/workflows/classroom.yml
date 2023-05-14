@@ -15,11 +15,52 @@ jobs:
 
       - uses: docker/setup-buildx-action@v2
 
-      # TODO build project
+      # @todo move below docker compose build
+      - name: Install composer cinema-service
+        run: docker run --rm -v ${{ github.workspace }}/cinema-service/lumen:/app composer install --ignore-platform-reqs --no-interaction --no-dev
+
+      - name: Install composer films-service
+        run: docker run --rm -v ${{ github.workspace }}/films-service/lumen:/app composer install --ignore-platform-reqs --no-interaction --no-dev
+
+      - name: Install composer tickets-service
+        run: docker run --rm -v ${{ github.workspace }}/tickets-service/lumen:/app composer install --ignore-platform-reqs --no-interaction --no-dev
 
       - name: Build images
         timeout-minutes: 7
         run: docker compose build
+
+      - name: Run database container
+        timeout-minutes: 5
+        run: docker compose up -d postgres
+
+      - name: Migrate cinema
+        run: |
+          until docker exec postgres pg_isready -h localhost -p 5432 -U program -d cinema; do
+            sleep 1
+          done
+          docker-compose run --rm cinema-service php artisan migrate --force
+
+      - name: Seed cinema
+        run: |
+          docker-compose run --rm cinema-service php artisan db:seed --class=CinemaSeeder --force
+          docker-compose run --rm cinema-service php artisan db:seed --class=FilmSessionSeeder --force
+
+      - name: Migrate films
+        run: |
+          until docker exec postgres pg_isready -h localhost -p 5432 -U program -d films; do
+            sleep 1
+          done
+          docker-compose run --rm films-service php artisan migrate --force
+
+      - name: Seed film
+        run: docker-compose run --rm films-service php artisan db:seed --class=FilmSeeder --force
+
+      - name: Migrate tickets
+        run: |
+          until docker exec postgres pg_isready -h localhost -p 5432 -U program -d tickets; do
+            sleep 1
+          done
+          docker-compose run --rm tickets-service php artisan migrate --force
 
       - name: Run containers
         timeout-minutes: 5
