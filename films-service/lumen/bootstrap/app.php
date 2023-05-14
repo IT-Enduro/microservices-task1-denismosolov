@@ -48,6 +48,12 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+// Pagination
+$app->bind(
+    Illuminate\Pagination\LengthAwarePaginator::class,
+    App\Pagination\FilmPaginator::class
+);
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files

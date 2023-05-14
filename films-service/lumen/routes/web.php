@@ -25,3 +25,8 @@ $router->get('/manage/health', function () use ($router) {
         return new Response('Service Unavailable', 503);
     }
 });
+
+//$router->get('/api/v1/films', 'FilmController@index');
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
+    $router->get('/films', 'FilmController@index');
+});
