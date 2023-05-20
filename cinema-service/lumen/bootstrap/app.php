@@ -48,6 +48,19 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+// Pagination
+$app->bind(
+    Illuminate\Pagination\LengthAwarePaginator::class,
+    App\Pagination\CinemaPaginator::class
+);
+
+// Film Service
+$app->bind(App\Services\FilmService::class, function ($app) {
+    return new App\Services\FilmService(new GuzzleHttp\Client([
+        'base_uri' => env('APP_URL_FILM_SERVICE'),
+    ]));
+});
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files

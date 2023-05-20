@@ -79,6 +79,7 @@ services:
       APP_ENV: "local"
       APP_DEBUG: "true"
       APP_URL: "http://localhost:8060"
+      APP_URL_FILM_SERVICE: "http://films-service:8070"
       APP_TIMEZONE: "UTC"
       LOG_CHANNEL: "stderr"
       DB_CONNECTION: "pgsql"
