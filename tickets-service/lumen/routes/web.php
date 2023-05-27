@@ -17,11 +17,17 @@ use Illuminate\Support\Facades\DB;
 */
 
 $router->get('/manage/health', function () use ($router) {
-    // @todo-coachup use https://spatie.be/docs/laravel-health/v1/available-checks/db-connection
+    // @todo use https://spatie.be/docs/laravel-health/v1/available-checks/db-connection
     try {
         DB::connection()->getPdo();
         return new Response('OK', 200);
     } catch (\Exception $e) {
         return new Response('Service Unavailable', 503);
     }
+});
+
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
+    $router->post('/tickets/cinema/{cinemaUid}/films/{filmUid}', 'TicketController@bookTicket');
+    $router->get('/tickets/{ticketUid}', 'TicketController@tickets');
+    $router->delete('/tickets/{ticketUid}', 'TicketController@returnTicket');
 });

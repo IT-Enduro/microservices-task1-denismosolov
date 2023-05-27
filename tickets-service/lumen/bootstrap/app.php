@@ -48,6 +48,16 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->bind(App\Services\FilmSessionService::class, function ($app) {
+    return new App\Services\FilmSessionService(new GuzzleHttp\Client([
+        'base_uri' => env('APP_URL_CINEMA_SERVICE'),
+    ]));
+});
+
+//$app->bind(App\Services\TicketService::class, function ($app) {
+//    return new App\Services\TicketService();
+//});
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
