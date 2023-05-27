@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\CinemaNotFoundException;
 use App\Exceptions\CouldNotGetFilmsException;
-use App\Exceptions\FilmSessionNotFoundException;
 use App\Models\Cinema;
 use App\Services\CinemaService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class CinemaController extends Controller
 {
@@ -23,12 +22,17 @@ class CinemaController extends Controller
 
     public function index(Request $request)
     {
-        $page = $request->query('page') ?? 0;
-        $size = $request->query('size') ?? 100;
+        try {
+            $page = $request->query('page') ?? 0;
+            $size = $request->query('size') ?? 100;
 
-        $films = Cinema::paginate($size, ['*'], 'page', $page);
+            $films = Cinema::paginate($size, ['*'], 'page', $page);
 
-        return response()->json($films);
+            return response()->json($films);
+        } catch (Exception $e) {
+            Log::error($e->getTraceAsString());
+            return response('', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function films($cinemaUid)
@@ -38,35 +42,14 @@ class CinemaController extends Controller
 
             return response()->json($filmsInCinemaResponse);
         } catch (CinemaNotFoundException $e) {
+            Log::error($e->getTraceAsString());
             return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         } catch (CouldNotGetFilmsException $e) {
-            Log::error($e->getPrevious()?->getTraceAsString());
+            Log::error($e->getTraceAsString());
             return response()->json(['message' => $e->getMessage()], Response::HTTP_BAD_GATEWAY);
+        } catch (Exception $e) {
+            Log::error($e->getTraceAsString());
+            return response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public function bookSeat(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'cinema_uid' => 'required|uuid',
-            'film_uid' => 'required|uuid',
-            'date' => 'required|date_format:Y-m-d\TH:i:s',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()], Response::HTTP_BAD_REQUEST);
-        }
-
-        $cinemaUid = $request->query('cinema_uid');
-        $filmUid = $request->query('film_uid');
-        $dateString = $request->query('date');
-
-        try {
-            $this->cinemaService->bookSeat($cinemaUid, $filmUid, $dateString);
-        } catch (CinemaNotFoundException|FilmSessionNotFoundException $e) {
-            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-        }
-
-        return response('', Response::HTTP_NO_CONTENT);
     }
 }

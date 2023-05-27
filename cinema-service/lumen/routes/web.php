@@ -28,7 +28,7 @@ $router->get('/manage/health', function () use ($router) {
 
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/cinema', 'CinemaController@index');
-    // @todo validate UUID?
     $router->get('/cinema/{cinemaUid}/films', 'CinemaController@films');
-    $router->post('/cinema/book-seat', 'CinemaController@bookSeat');
+    $router->get('/film-session', 'FilmSessionController@filmSession');
+    $router->post('/film-session/{sessionUid}/book-seat', 'FilmSessionController@bookSeat');
 });
